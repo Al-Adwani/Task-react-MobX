@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import MessageItem from "./MessageItem";
+import roomStore from "../roomStore";
+import { observer } from "mobx-react-lite";
 
-function ChatRoom(props) {
+function ChatRoom() {
   const roomSlug = useParams().roomSlug;
-  const room = props.rooms.find((room) => room.slug === roomSlug);
+
+  const room = roomStore.rooms.find((room) => room.slug === roomSlug);
+
   const messagesList = room.messages.map((msg) => {
     return <MessageItem msg={msg.msg} />;
   });
@@ -13,7 +17,7 @@ function ChatRoom(props) {
     setMsg({ ...msg, [event.target.name]: event.target.value });
   };
   const handleSubmit = () => {
-    props.createMsg(room.id, msg);
+    roomStore.createMsg(room.id, msg);
   };
 
   return (
@@ -52,4 +56,4 @@ function ChatRoom(props) {
     </div>
   );
 }
-export default ChatRoom;
+export default observer(ChatRoom);
